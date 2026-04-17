@@ -232,15 +232,14 @@ letter-spacing: -0.04em;
 font-size: clamp(5rem, 12vw, 10rem);
 line-height: 0.85;
 display: block;
-transform: translateY(100%);
-will-change: transform;
+color: #000000;
 }
 .stat-label {
 font-family: ‘Space Mono’, monospace;
 font-size: 0.72rem;
 text-transform: uppercase;
 letter-spacing: 0.06em;
-opacity: 0;
+color: #ffffff;
 }
 
 /* ── MANIFESTO ── */
@@ -959,32 +958,49 @@ ScrollTrigger.create({
   once: true
 });
 
-// ── STATS ─────────────────────────────────
-gsap.utils.toArray('.stat-value').forEach((el, i) => {
-  gsap.to(el, {
-    y: '0%',
-    duration: 0.8,
-    ease: 'power4.out',
-    delay: i * 0.1,
-    scrollTrigger: {
-      trigger: '#stats',
-      start: 'top 75%',
-      once: true
+// ── STATS — slot machine + count-up ───────
+(function() {
+  const statData = [
+    { prefix: '', value: 13, suffix: '+' },
+    { prefix: '', value: 200, suffix: 'M' },
+    { prefix: '+', value: 35, suffix: '%' },
+    { prefix: '+', value: 2.3, suffix: 'pt' }
+  ];
+  const valueEls = document.querySelectorAll('.stat-value');
+  const labelEls = document.querySelectorAll('.stat-label');
+
+  function runSlot(el, label, data, delay) {
+    setTimeout(() => {
+      const frames = 28;
+      let f = 0;
+      const tick = () => {
+        f++;
+        const p = f / frames;
+        const cur = data.value * Math.min(p * 1.15, 1);
+        const disp = Number.isInteger(data.value) ? Math.round(cur) : Math.round(cur * 10) / 10;
+        const noise = p < 0.72 ? Math.floor(Math.random() * 10) : '';
+        el.textContent = data.prefix + disp + noise + data.suffix;
+        if (f < frames) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = data.prefix + data.value + data.suffix;
+          gsap.to(el, { color: '#ffffff', duration: 0.2, ease: 'power1.out' });
+          if (label) gsap.to(label, { color: '#000000', duration: 0.2, ease: 'power1.out' });
+        }
+      };
+      requestAnimationFrame(tick);
+    }, delay);
+  }
+
+  ScrollTrigger.create({
+    trigger: '#stats',
+    start: 'top 75%',
+    once: true,
+    onEnter: () => {
+      valueEls.forEach((el, i) => runSlot(el, labelEls[i], statData[i], i * 100));
     }
   });
-});
-gsap.utils.toArray('.stat-label').forEach((el, i) => {
-  gsap.to(el, {
-    opacity: 1,
-    duration: 0.6,
-    delay: 0.4 + i * 0.1,
-    scrollTrigger: {
-      trigger: '#stats',
-      start: 'top 75%',
-      once: true
-    }
-  });
-});
+})();
 
 // ── MANIFESTO ─────────────────────────────
 gsap.to('.manifesto-quote', {
