@@ -270,8 +270,22 @@ will-change: transform, opacity;
 }
 
 /* ── PROJECTS ── */
+#projects-wrapper {
+position: relative;
+}
+#projects-orange-bg {
+position: sticky;
+top: 0;
+height: 100vh;
+background: #ff4d00;
+width: 100%;
+margin-bottom: -100vh;
+z-index: 0;
+}
 #projects {
-background: #0a0a0a;
+position: relative;
+z-index: 1;
+background: transparent;
 color: #f4f4f4;
 border-top: 2px solid #ff4d00;
 }
@@ -281,6 +295,7 @@ border-bottom: 1px solid rgba(255,255,255,0.1);
 padding: 6rem 3rem;
 overflow: hidden;
 cursor: none;
+background: #0a0a0a;
 }
 .project-strip::before {
 content: ‘’;
@@ -497,6 +512,18 @@ transform-origin: left;
 
 /* ── SECTION TRANSITION overlay ── */
 .section-reveal { opacity: 0; }
+
+/* ── TOUCH: restore cursor ── */
+@media (pointer: coarse) {
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
+
+/* ── MOBILE: projects opacity fade (no pin) ── */
+@media (max-width: 767px) {
+  #projects-orange-bg { display: none; }
+  .project-strip { opacity: 0; transition: none; }
+}
 
 /* ── DISPLAY TYPE MOBILE OVERRIDE ── */
 @media (max-width: 767px) {
@@ -729,6 +756,8 @@ transform-origin: left;
      PROJECTS
 ════════════════════════════════════════ -->
 
+<div id="projects-wrapper">
+<div id="projects-orange-bg"></div>
 <section id="projects">
 
   <!-- Doritos Rainbow -->
@@ -789,6 +818,7 @@ transform-origin: left;
   </div>
 
 </section>
+</div><!-- /projects-wrapper -->
 
 <!-- ════════════════════════════════════════
      CREDENTIALS
@@ -1073,11 +1103,36 @@ gsap.utils.toArray('.contact-triangle').forEach((el, i) => {
   });
 });
 
-// ── MOBILE: hide floaters ─────────────────
+// ── MOBILE: hide floaters + project fade ──
 if (window.innerWidth < 768) {
   document.querySelectorAll('.floating-module').forEach(el => {
     el.style.display = 'none';
     el.style.opacity = '0';
+  });
+  gsap.utils.toArray('.project-strip').forEach(el => {
+    gsap.to(el, {
+      opacity: 1, duration: 0.6, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+    });
+  });
+}
+
+// ── CURSOR MAGNETIC ────────────────────────
+if (!window.matchMedia('(pointer: coarse)').matches) {
+  document.querySelectorAll('a, .back-top, .project-strip').forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const dx = e.clientX - cx, dy = e.clientY - cy;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 80) {
+        const s = (80 - dist) / 80 * 0.35;
+        gsap.to(el, { x: dx * s, y: dy * s, duration: 0.3, ease: 'power2.out' });
+      }
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.5)' });
+    });
   });
 }
 
