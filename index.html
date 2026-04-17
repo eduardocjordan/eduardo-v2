@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Eduardo Castro — Brand Strategist</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f4f4f4;
+    --accent: #ff4d00;
+  }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: auto; } /* GSAP handles smooth scroll */
+
+body {
+background-color: var(–paper);
+color: var(–ink);
+font-family: ‘Space Grotesk’, sans-serif;
+overflow-x: hidden;
+cursor: none; /* custom cursor */
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor {
+position: fixed;
+width: 12px; height: 12px;
+background: var(–accent);
+border-radius: 50%;
+pointer-events: none;
+z-index: 9999;
+transform: translate(-50%, -50%);
+transition: width 0.2s, height 0.2s, background 0.2s;
+mix-blend-mode: multiply;
+}
+.cursor-ring {
+position: fixed;
+width: 36px; height: 36px;
+border: 1.5px solid var(–accent);
+border-radius: 50%;
+pointer-events: none;
+z-index: 9998;
+transform: translate(-50%, -50%);
+transition: width 0.35s ease, height 0.35s ease, opacity 0.3s;
+opacity: 0.6;
+}
+body:hover .cursor { opacity: 1; }
+a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; }
+
+/* ── TYPOGRAPHY ── */
+.massive-type {
+font-family: ‘Space Grotesk’, sans-serif;
+line-height: 0.85;
+letter-spacing: -0.04em;
+text-transform: uppercase;
+font-weight: 800;
+}
+.mono-text {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+}
+
+/* ── LOADING SCREEN ── */
+#loader {
+position: fixed;
+inset: 0;
+background: #0a0a0a;
+z-index: 1000;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+}
+#loader-text {
+font-family: ‘Space Mono’, monospace;
+font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–accent);
+opacity: 0;
+}
+#loader-bar {
+position: absolute;
+bottom: 0; left: 0;
+height: 2px;
+background: var(–accent);
+width: 0%;
+}
+#loader-wipe {
+position: absolute;
+inset: 0;
+background: var(–accent);
+transform: scaleX(0);
+transform-origin: left;
+}
+
+/* ── CURTAIN SECTION ── */
+#curtain {
+position: relative;
+height: 100vh;
+width: 100vw;
+background: #121212;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 2rem 3rem;
+background-image:
+linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
+linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+background-size: 20% 25%;
+}
+.curtain-meta {
+position: absolute;
+font-family: ‘Space Mono’, monospace;
+font-size: 0.6rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+}
+.stroke-text {
+-webkit-text-stroke: 2px var(–accent);
+color: transparent;
+}
+.curtain-name {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.82;
+font-size: clamp(6rem, 18vw, 22rem);
+color: var(–accent);
+overflow: hidden;
+}
+.curtain-name-line { display: block; transform: translateY(110%); }
+
+/* ── HERO SECTION ── */
+#hero {
+position: relative;
+height: 100vh;
+width: 100vw;
+background: var(–paper);
+overflow: hidden;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.floating-module {
+position: fixed;
+background: var(–paper);
+border: 2px solid var(–ink);
+padding: 1.25rem;
+z-index: 50;
+opacity: 0;
+}
+.hero-name {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.82;
+font-size: clamp(8rem, 28vw, 36rem);
+text-align: center;
+overflow: hidden;
+}
+.hero-name-line {
+display: block;
+overflow: hidden;
+}
+.hero-name-inner { display: block; transform: translateY(110%); }
+.orange-text { color: var(–accent); }
+.black-text { color: var(–ink); }
+
+/* ── STATS ── */
+#stats {
+position: relative;
+background: var(–accent);
+color: var(–ink);
+padding: 8rem 3rem;
+overflow: hidden;
+border-top: 2px solid var(–ink);
+}
+#stats .diagonal-cut {
+position: absolute;
+top: 0; right: 0;
+width: 50%; height: 100%;
+background: var(–ink);
+clip-path: polygon(100% 0, 20% 100%, 100% 100%);
+pointer-events: none;
+}
+.stat-item { overflow: hidden; }
+.stat-value {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+font-size: clamp(5rem, 12vw, 10rem);
+line-height: 0.85;
+display: block;
+transform: translateY(100%);
+}
+.stat-label {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+opacity: 0;
+}
+
+/* ── MANIFESTO ── */
+#manifesto {
+padding: 10rem 3rem;
+background: var(–paper);
+border-top: 2px solid var(–ink);
+overflow: hidden;
+}
+.manifesto-quote {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.85;
+font-size: clamp(3rem, 8vw, 10rem);
+margin-bottom: 6rem;
+opacity: 0;
+transform: translateY(60px);
+}
+.manifesto-col {
+opacity: 0;
+transform: translateY(40px);
+}
+
+/* ── PROJECTS ── */
+#projects {
+background: #1a1a1a;
+color: var(–paper);
+border-top: 2px solid var(–ink);
+}
+.project-strip {
+position: relative;
+border-bottom: 1px solid rgba(255,255,255,0.1);
+padding: 6rem 3rem;
+overflow: hidden;
+cursor: none;
+}
+.project-strip::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background: var(–accent);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+z-index: 0;
+}
+.project-strip:hover::before { transform: scaleX(1); }
+.project-strip:hover .project-title { color: var(–ink); }
+.project-strip:hover .project-meta { color: var(–ink); }
+.project-strip:hover .project-desc { color: rgba(0,0,0,0.6); }
+.project-strip:hover .project-triangle { opacity: 0.15; }
+
+.project-inner {
+position: relative;
+z-index: 1;
+display: flex;
+flex-direction: column;
+gap: 2rem;
+}
+@media (min-width: 768px) {
+.project-inner { flex-direction: row; align-items: flex-start; }
+}
+.project-meta-col { width: 100%; }
+@media (min-width: 768px) { .project-meta-col { width: 25%; } }
+
+.project-meta {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.6rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–accent);
+margin-bottom: 1.5rem;
+display: block;
+transition: color 0.4s;
+}
+.project-desc {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.6rem;
+line-height: 1.7;
+text-transform: lowercase;
+color: rgba(255,255,255,0.4);
+max-width: 260px;
+transition: color 0.4s;
+}
+.project-title {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.7;
+font-size: clamp(5rem, 16vw, 22rem);
+color: var(–accent);
+white-space: nowrap;
+margin-right: -20vw;
+flex: 1;
+transition: color 0.4s;
+transform: translateX(60px);
+opacity: 0;
+}
+.project-triangle {
+position: absolute;
+clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+opacity: 0;
+transition: opacity 0.4s;
+pointer-events: none;
+}
+
+/* ── CREDENTIALS ── */
+#credentials {
+position: relative;
+padding: 10rem 3rem;
+background: var(–paper);
+border-top: 2px solid var(–ink);
+overflow: hidden;
+}
+.bg-letter {
+position: absolute;
+inset: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+pointer-events: none;
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+font-size: 90vw;
+line-height: 1;
+-webkit-text-stroke: 1px var(–ink);
+color: transparent;
+opacity: 0.025;
+text-transform: uppercase;
+user-select: none;
+}
+.cred-item {
+opacity: 0;
+transform: translateY(50px);
+margin-bottom: 10rem;
+}
+.cred-number {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.08em;
+text-transform: uppercase;
+margin-bottom: 3rem;
+display: block;
+}
+.cred-title {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.75;
+font-size: clamp(3rem, 10vw, 14rem);
+border-bottom: 2px solid var(–ink);
+padding-bottom: 2rem;
+margin-bottom: 1.5rem;
+}
+.cred-institution {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+font-size: clamp(2rem, 5vw, 5rem);
+}
+
+/* ── CONTACT ── */
+#contact {
+position: relative;
+min-height: 100vh;
+background: #1a1a1a;
+color: var(–paper);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: flex-start;
+padding: 4rem 3rem;
+overflow: hidden;
+border-top: 2px solid var(–ink);
+}
+.contact-triangle {
+position: absolute;
+clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+pointer-events: none;
+}
+.contact-heading {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 800;
+text-transform: uppercase;
+letter-spacing: -0.04em;
+line-height: 0.75;
+font-size: clamp(4rem, 16vw, 24rem);
+color: var(–accent);
+margin-bottom: 4rem;
+max-width: 95vw;
+opacity: 0;
+transform: translateY(80px);
+}
+.contact-link {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(–paper);
+text-decoration: none;
+display: block;
+margin-bottom: 0.5rem;
+opacity: 0;
+transition: text-decoration 0.2s;
+}
+.contact-link:hover { text-decoration: line-through; }
+
+/* ── FOOTER ── */
+.site-footer {
+position: absolute;
+bottom: 1.5rem;
+left: 3rem;
+right: 3rem;
+display: flex;
+justify-content: space-between;
+align-items: flex-end;
+border-top: 1px solid rgba(255,255,255,0.1);
+padding-top: 1.5rem;
+}
+.back-top {
+width: 2.5rem; height: 2.5rem;
+border: 1px solid white;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: none;
+transition: background 0.2s, color 0.2s;
+}
+.back-top:hover { background: white; color: black; }
+
+/* ── SCROLL PROGRESS ── */
+#progress {
+position: fixed;
+top: 0; left: 0;
+height: 2px;
+background: var(–accent);
+z-index: 200;
+width: 0%;
+transform-origin: left;
+}
+
+/* ── SECTION TRANSITION overlay ── */
+.section-reveal { opacity: 0; }
+</style>
+
+</head>
+<body>
+
+<!-- Custom cursor -->
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- Scroll progress -->
+
+<div id="progress"></div>
+
+<!-- ════════════════════════════════════════
+     LOADER
+════════════════════════════════════════ -->
+
+<div id="loader">
+  <div id="loader-text">Eduardo Castro — Brand Strategist</div>
+  <div id="loader-bar"></div>
+  <div id="loader-wipe"></div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CURTAIN (editorial intro — acts as loading screen reveal)
+════════════════════════════════════════ -->
+
+<section id="curtain">
+  <div class="curtain-meta text-gray-500" style="top:2.5rem; left:3rem;">
+    <p>BRAND STRATEGIST</p>
+    <p>MEXICO CITY</p>
+    <p>EST. 2012</p>
+  </div>
+  <div class="curtain-meta text-right" style="top:2.5rem; right:3rem; color:var(--accent); max-width:200px; line-height:1.6; text-transform:lowercase;">
+    "Thirteen years turning consumer insight into the brands people choose to live inside."
+  </div>
+
+  <div style="width:100%; padding-top:5rem;">
+    <div class="curtain-name">
+      <span class="curtain-name-line" id="cn1">EDUARDO</span>
+    </div>
+    <div class="curtain-name">
+      <span class="curtain-name-line" id="cn2">CASTRO</span>
+    </div>
+    <div class="curtain-name stroke-text" style="color:transparent;">
+      <span class="curtain-name-line" id="cn3">CASTRO</span>
+    </div>
+  </div>
+
+  <div class="curtain-meta" style="bottom:2.5rem; left:3rem; color:var(--accent); line-height:1.8;">
+    <p>DOWNLOAD RESUME</p>
+    <p>LINKEDIN (EDUARDOCAJ)</p>
+    <p>EDUARDOCJORDAN@ICLOUD.COM</p>
+  </div>
+  <div style="position:absolute; bottom:2.5rem; right:3rem; display:flex; align-items:center; gap:1rem; color:var(--accent);">
+    <span class="mono-text" style="font-size:0.6rem;">SCROLL TO DISCOVER</span>
+    <div style="width:2rem; height:2rem; border:1px solid var(--accent); display:flex; align-items:center; justify-content:center;">
+      <span class="material-symbols-outlined" style="font-size:1rem;">arrow_downward</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+
+<section id="hero">
+  <!-- Floating nav modules -->
+  <div class="floating-module" id="mod-tl" style="top:1.5rem; left:1.5rem; width:16rem;">
+    <p class="mono-text" style="line-height:1.6;">
+      EDUARDO CASTRO<br/>
+      BRAND STRATEGIST —<br/>
+      MEXICO CITY // 2026
+    </p>
+  </div>
+  <div class="floating-module" id="mod-tr" style="top:1.5rem; right:1.5rem; width:18rem;">
+    <p style="font-size:0.7rem; font-weight:500; line-height:1.6; font-style:italic;">
+      "Thirteen years turning consumer insight into the brands people choose to live inside."
+    </p>
+  </div>
+  <div class="floating-module" id="mod-mr" style="top:35%; right:1.5rem; width:14rem;">
+    <p class="mono-text" style="line-height:1.5; font-size:0.6rem;">
+      "I build brands that move both culture and market share."
+    </p>
+  </div>
+  <div class="floating-module" id="mod-bl2" style="bottom:8rem; left:1.5rem; width:16rem;">
+    <ul class="mono-text" style="font-size:0.6rem; line-height:2;">
+      <li>● DOWNLOAD RESUME</li>
+      <li>● LINKEDIN (EDUARDOCAJ)</li>
+      <li>● EDUARDOCJORDAN@ICLOUD.COM</li>
+    </ul>
+  </div>
+  <div class="floating-module" id="mod-bl" style="bottom:1.5rem; left:1.5rem; width:16rem;">
+    <p class="mono-text" style="font-size:0.6rem; border-bottom:1px solid var(--ink); padding-bottom:0.5rem; margin-bottom:0.5rem;">EXPERIENCE</p>
+    <p style="font-weight:700; font-size:0.9rem;">BRAND STRATEGIST</p>
+    <p style="font-size:0.75rem;">MEXICO CITY</p>
+    <p style="font-size:0.75rem;">EST. 2012</p>
+  </div>
+  <div class="floating-module" id="mod-br" style="bottom:1.5rem; right:1.5rem; width:20rem;">
+    <p style="font-size:0.9rem; font-style:italic; line-height:1.6;">
+      "Engineer-turned-marketer with <strong>13+ years</strong> in international FMCG — PepsiCo, J&amp;J, Grupo Mariposa."
+    </p>
+  </div>
+
+  <!-- Name -->
+
+  <div style="text-align:center; width:100%;">
+    <div class="hero-name">
+      <span class="hero-name-line">
+        <span class="hero-name-inner" id="hn1">
+          <span class="orange-text">EDU</span><span class="black-text">ARDO</span>
+        </span>
+      </span>
+    </div>
+    <div class="hero-name">
+      <span class="hero-name-line">
+        <span class="hero-name-inner" id="hn2">
+          <span class="orange-text">CAS</span><span class="black-text">TRO</span>
+        </span>
+      </span>
+    </div>
+  </div>
+
+  <div style="position:absolute; bottom:1.5rem; left:1rem; font-family:'Space Grotesk',sans-serif; font-weight:800; text-transform:uppercase; font-size:1.5rem; letter-spacing:-0.04em; z-index:60;">E.C.</div>
+</section>
+
+<!-- ════════════════════════════════════════
+     STATS
+════════════════════════════════════════ -->
+
+<section id="stats">
+  <div class="diagonal-cut"></div>
+  <div style="position:relative; z-index:2;">
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; align-items:end;">
+      <div class="stat-item">
+        <span class="stat-value">13+</span>
+        <span class="stat-label">Years in FMCG</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">200M</span>
+        <span class="stat-label">Organic impressions</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">+35%</span>
+        <span class="stat-label">Revenue growth</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">+2.3pt</span>
+        <span class="stat-label">Brand SOM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     MANIFESTO
+════════════════════════════════════════ -->
+
+<section id="manifesto">
+  <h2 class="manifesto-quote">
+    "BRANDS ARE DECISION ARCHITECTURES. I BUILD THE ONES PEOPLE CHOOSE TO LIVE INSIDE."
+  </h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:4rem;">
+    <div class="manifesto-col">
+      <p style="font-size:1.1rem; font-weight:700; line-height:1.5;">
+        Eduardo Castro is a Brand Strategist with thirteen years building consumer brands across Mexico and Latin America. He has led strategy for PepsiCo, Johnson &amp; Johnson, and Grupo Mariposa — shaping how millions of consumers experience some of the region's most iconic products.
+      </p>
+    </div>
+    <div class="manifesto-col">
+      <p style="font-size:1.1rem; font-weight:700; line-height:1.5;">
+        He treats brand strategy as translation work: between business goals and human desire, between quantitative truth and cultural intuition, between global frameworks and the deeply local.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PROJECTS
+════════════════════════════════════════ -->
+
+<section id="projects">
+
+  <!-- Doritos Rainbow -->
+
+  <div class="project-strip">
+    <div class="project-triangle" style="top:-20%; left:20%; width:16rem; height:16rem; background:var(--accent);transform:rotate(15deg);"></div>
+    <div class="project-inner">
+      <div class="project-meta-col">
+        <span class="project-meta">PEPSICO — 2016</span>
+        <p class="project-desc">
+          PepsiCo's first purpose-driven product. Launched the week of the Pulse massacre in Orlando. 100% of profits donated to LGBT+ ally NGOs. Sold out in one week instead of eight. 200M+ organic impressions. President's Outliers Award.
+        </p>
+      </div>
+      <h3 class="project-title">DORITOS RAINBOW</h3>
+    </div>
+  </div>
+
+  <!-- Neutrogena -->
+
+  <div class="project-strip">
+    <div class="project-inner">
+      <div class="project-meta-col">
+        <span class="project-meta">JOHNSON &amp; JOHNSON — 2017–2020</span>
+        <p class="project-desc">
+          Unlocked a four-year regulatory stall by mapping the SPF 55+ COFEPRIS pathway. Coordinated regional production in Brazil. Launched Sun Care category from zero in Mexico. +10% incremental B2B revenue.
+        </p>
+      </div>
+      <h3 class="project-title">NEUTROGENA</h3>
+    </div>
+  </div>
+
+  <!-- ERG Leadership -->
+
+  <div class="project-strip">
+    <div class="project-inner">
+      <div class="project-meta-col">
+        <span class="project-meta">J&amp;J / PEPSICO — 2014–2020</span>
+        <p class="project-desc">
+          Founded EQUAL ERG at PepsiCo and led Open &amp; Out at J&amp;J. Contributed to J&amp;J earning HRC 'Best Place to Work for LGBT+ Equity'. James E. Burke Award. LATAM Forum recognition.
+        </p>
+      </div>
+      <h3 class="project-title">ERG LEADERSHIP</h3>
+    </div>
+  </div>
+
+  <!-- Grupo Mariposa -->
+
+  <div class="project-strip">
+    <div class="project-inner">
+      <div class="project-meta-col">
+        <span class="project-meta">GRUPO MARIPOSA — 2020–2024</span>
+        <p class="project-desc">
+          Built a brand and innovation system from scratch. Filtered 165 ideas down to one market-ready product through rigorous consumer validation. +35% revenue growth. Full P&amp;L ownership.
+        </p>
+      </div>
+      <h3 class="project-title">GRUPO MARIPOSA</h3>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════
+     CREDENTIALS
+════════════════════════════════════════ -->
+
+<section id="credentials">
+  <div class="bg-letter">E</div>
+  <div style="position:relative; z-index:1;">
+
+```
+<div class="cred-item">
+  <span class="cred-number">01</span>
+  <div class="cred-title">BSC COMPUTER ENGINEERING &amp; IT PROJECT MANAGEMENT</div>
+  <div class="cred-institution">TECNOLÓGICO DE MONTERREY</div>
+</div>
+
+<div class="cred-item">
+  <span class="cred-number">02</span>
+  <div class="cred-title">STRATEGIC MARKETING · AUG 2023</div>
+  <div class="cred-institution">KELLOGG SCHOOL OF MANAGEMENT</div>
+</div>
+
+<div class="cred-item">
+  <span class="cred-number">03</span>
+  <div class="cred-title">DATA ANALYSIS · AUG 2022</div>
+  <div class="cred-institution">WHARTON EXECUTIVE EDUCATION</div>
+</div>
+
+<div class="cred-item" style="margin-bottom:0;">
+  <span class="cred-number">04</span>
+  <div class="cred-title">PMP · OCT 2016 &amp;&amp; CSPO · OCT 2022</div>
+  <div class="cred-institution">PMI / SCRUM INC.</div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════ -->
+
+<section id="contact">
+  <!-- Background triangles -->
+  <div class="contact-triangle" style="top:10%; left:15%; width:18rem; height:18rem; background:var(--accent); opacity:0.4; transform:rotate(45deg);"></div>
+  <div class="contact-triangle" style="top:60%; right:10%; width:24rem; height:24rem; background:var(--accent); opacity:0.3; transform:rotate(-15deg);"></div>
+  <div class="contact-triangle" style="bottom:5%; left:40%; width:12rem; height:12rem; background:var(--accent); opacity:0.5; transform:rotate(180deg);"></div>
+  <div class="contact-triangle" style="top:40%; left:60%; width:8rem; height:8rem; background:var(--accent); opacity:0.25; transform:rotate(90deg);"></div>
+  <div class="contact-triangle" style="top:20%; right:40%; width:30rem; height:30rem; background:var(--accent); opacity:0.1; transform:rotate(-60deg);"></div>
+
+  <div style="position:relative; z-index:1; width:100%; margin-bottom:8rem;">
+    <h2 class="contact-heading">LET'S BUILD SOMETHING WORTH REMEMBERING</h2>
+    <div id="contact-links">
+      <a class="contact-link" href="mailto:eduardocjordan@icloud.com">EDUARDOCJORDAN@ICLOUD.COM</a>
+      <a class="contact-link" href="https://linkedin.com/in/eduardocaj">LINKEDIN.COM/IN/EDUARDOCAJ</a>
+      <a class="contact-link" href="https://edu.casjor.com/assets/CV%20Eduardo%20Castro.pdf">DOWNLOAD RESUME</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="mono-text" style="opacity:0.35; font-size:0.6rem; line-height:1.8;">
+      <p>© EDUARDO CASTRO JORDAN · CDMX · 2026</p>
+      <p>EDUARDOCJORDAN@ICLOUD.COM</p>
+    </div>
+    <div class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <span class="material-symbols-outlined" style="font-size:1rem;">arrow_upward</span>
+    </div>
+  </footer>
+</section>
+
+<!-- ════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── CUSTOM CURSOR ──────────────────────
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  gsap.to(cursor, { x: mx, y: my, duration: 0.1 });
+});
+// Ring follows with lag
+(function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  gsap.set(ring, { x: rx, y: ry });
+  requestAnimationFrame(animRing);
+})();
+
+// Scale cursor on hover
+document.querySelectorAll('a, .back-top, .project-strip').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    gsap.to(cursor, { scale: 2.5, duration: 0.3 });
+    gsap.to(ring, { scale: 1.5, opacity: 0.3, duration: 0.3 });
+  });
+  el.addEventListener('mouseleave', () => {
+    gsap.to(cursor, { scale: 1, duration: 0.3 });
+    gsap.to(ring, { scale: 1, opacity: 0.6, duration: 0.3 });
+  });
+});
+
+// ── SCROLL PROGRESS ──────────────────────
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  progress.style.width = pct + '%';
+});
+
+// ── LOADER ───────────────────────────────
+const tl = gsap.timeline();
+tl
+  .to('#loader-text', { opacity: 1, duration: 0.6, ease: 'power2.out' })
+  .to('#loader-bar', { width: '100%', duration: 1.4, ease: 'power1.inOut' }, 0.4)
+  .to('#loader-text', { opacity: 0, duration: 0.3 }, '+=0.2')
+  .to('#loader-wipe', { scaleX: 1, duration: 0.5, ease: 'power3.inOut' })
+  .to('#loader-wipe', { scaleX: 0, transformOrigin: 'right', duration: 0.5, ease: 'power3.inOut' })
+  .to('#loader', { opacity: 0, duration: 0.3, pointerEvents: 'none' })
+  .set('#loader', { display: 'none' })
+  // Curtain name reveal
+  .to(['#cn1','#cn2','#cn3'], {
+    y: '0%',
+    duration: 0.9,
+    stagger: 0.12,
+    ease: 'power4.out'
+  }, '-=0.2');
+
+// ── HERO — floaters fade in on scroll ────
+ScrollTrigger.create({
+  trigger: '#hero',
+  start: 'top center',
+  onEnter: () => {
+    gsap.to(['#mod-tl','#mod-tr','#mod-mr','#mod-bl','#mod-bl2','#mod-br'], {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: 'power3.out'
+    });
+    gsap.to(['#hn1','#hn2'], {
+      y: '0%',
+      duration: 1,
+      stagger: 0.15,
+      ease: 'power4.out',
+      delay: 0.2
+    });
+  },
+  once: true
+});
+
+// ── STATS ─────────────────────────────────
+gsap.utils.toArray('.stat-value').forEach((el, i) => {
+  gsap.to(el, {
+    y: '0%',
+    duration: 0.8,
+    ease: 'power4.out',
+    delay: i * 0.1,
+    scrollTrigger: {
+      trigger: '#stats',
+      start: 'top 75%',
+      once: true
+    }
+  });
+});
+gsap.utils.toArray('.stat-label').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1,
+    duration: 0.6,
+    delay: 0.4 + i * 0.1,
+    scrollTrigger: {
+      trigger: '#stats',
+      start: 'top 75%',
+      once: true
+    }
+  });
+});
+
+// ── MANIFESTO ─────────────────────────────
+gsap.to('.manifesto-quote', {
+  opacity: 1, y: 0, duration: 1,
+  ease: 'power3.out',
+  scrollTrigger: { trigger: '#manifesto', start: 'top 70%', once: true }
+});
+gsap.utils.toArray('.manifesto-col').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1, y: 0, duration: 0.8,
+    delay: 0.3 + i * 0.15,
+    ease: 'power3.out',
+    scrollTrigger: { trigger: '#manifesto', start: 'top 70%', once: true }
+  });
+});
+
+// ── PROJECTS ──────────────────────────────
+gsap.utils.toArray('.project-title').forEach(el => {
+  gsap.to(el, {
+    x: 0, opacity: 1,
+    duration: 1,
+    ease: 'power4.out',
+    scrollTrigger: {
+      trigger: el.closest('.project-strip'),
+      start: 'top 80%',
+      once: true
+    }
+  });
+});
+
+// ── CREDENTIALS ───────────────────────────
+gsap.utils.toArray('.cred-item').forEach(el => {
+  gsap.to(el, {
+    opacity: 1, y: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 80%',
+      once: true
+    }
+  });
+});
+
+// ── CONTACT ───────────────────────────────
+gsap.to('.contact-heading', {
+  opacity: 1, y: 0, duration: 1,
+  ease: 'power4.out',
+  scrollTrigger: { trigger: '#contact', start: 'top 70%', once: true }
+});
+gsap.utils.toArray('.contact-link').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1, duration: 0.5,
+    delay: 0.5 + i * 0.12,
+    scrollTrigger: { trigger: '#contact', start: 'top 70%', once: true }
+  });
+});
+
+// ── PARALLAX on triangles in contact ──────
+gsap.utils.toArray('.contact-triangle').forEach((el, i) => {
+  gsap.to(el, {
+    y: (i % 2 === 0 ? -80 : 80),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#contact',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1.5
+    }
+  });
+});
+
+// ── MOBILE: hide floaters ─────────────────
+if (window.innerWidth < 768) {
+  document.querySelectorAll('.floating-module').forEach(el => {
+    el.style.display = 'none';
+    el.style.opacity = '0';
+  });
+}
+</script>
+
+</body>
+</html>
