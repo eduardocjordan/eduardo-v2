@@ -15,6 +15,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
@@ -47,8 +48,10 @@ background-color: var(--paper);
 color: var(--ink);
 font-family: ‘Space Grotesk’, sans-serif;
 overflow-x: hidden;
-cursor: none; /* custom cursor */
+overflow-y: hidden; /* removed after loader */
+cursor: none;
 }
+body.ready { overflow-y: auto; }
 
 /* ── CUSTOM CURSOR ── */
 .cursor {
@@ -163,7 +166,7 @@ font-size: clamp(6rem, 18vw, 22rem);
 color: var(--accent);
 overflow: hidden;
 }
-.curtain-name-line { display: block; transform: translateY(110%); }
+.curtain-name-line { display: block; transform: translateY(110%); will-change: transform; }
 
 /* ── HERO SECTION ── */
 #hero {
@@ -183,6 +186,7 @@ border: 2px solid var(--ink);
 padding: 1.25rem;
 z-index: 50;
 opacity: 0;
+will-change: transform, opacity;
 }
 .hero-name {
 font-family: ‘Space Grotesk’, sans-serif;
@@ -198,7 +202,7 @@ overflow: hidden;
 display: block;
 overflow: hidden;
 }
-.hero-name-inner { display: block; transform: translateY(110%); }
+.hero-name-inner { display: block; transform: translateY(110%); will-change: transform; }
 .orange-text { color: var(--accent); }
 .black-text { color: var(--ink); }
 
@@ -229,6 +233,7 @@ font-size: clamp(5rem, 12vw, 10rem);
 line-height: 0.85;
 display: block;
 transform: translateY(100%);
+will-change: transform;
 }
 .stat-label {
 font-family: ‘Space Mono’, monospace;
@@ -256,11 +261,13 @@ margin-bottom: 6rem;
 opacity: 0;
 transform: translateY(60px);
 color: #ff4d00;
+will-change: transform, opacity;
 }
 .manifesto-col {
 opacity: 0;
 transform: translateY(40px);
 color: #f4f4f4;
+will-change: transform, opacity;
 }
 
 /* ── PROJECTS ── */
@@ -338,6 +345,7 @@ flex: 1;
 transition: color 0.4s;
 transform: translateX(60px);
 opacity: 0;
+will-change: transform, opacity;
 }
 .project-triangle {
 position: absolute;
@@ -376,6 +384,7 @@ user-select: none;
 opacity: 0;
 transform: translateY(50px);
 margin-bottom: 10rem;
+will-change: transform, opacity;
 }
 .cred-number {
 font-family: ‘Space Mono’, monospace;
@@ -437,6 +446,7 @@ margin-bottom: 4rem;
 max-width: 95vw;
 opacity: 0;
 transform: translateY(80px);
+will-change: transform, opacity;
 }
 .contact-link {
 font-family: ‘Space Mono’, monospace;
@@ -855,6 +865,20 @@ transform-origin: left;
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
+// ── LENIS SMOOTH SCROLL ────────────────
+const lenis = new Lenis();
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+gsap.ticker.lagSmoothing(0);
+
+// ── iOS: fixed → absolute on floaters ──
+const isIOS = CSS.supports('-webkit-touch-callout', 'none');
+if (isIOS) {
+  document.querySelectorAll('.floating-module').forEach(el => {
+    el.style.position = 'absolute';
+  });
+}
+
 // ── CUSTOM CURSOR ──────────────────────
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
@@ -892,6 +916,7 @@ window.addEventListener('scroll', () => {
 });
 
 // ── LOADER ───────────────────────────────
+document.fonts.ready.then(() => {
 const tl = gsap.timeline();
 tl
   .to('#loader-text', { opacity: 1, duration: 0.6, ease: 'power2.out' })
@@ -901,6 +926,7 @@ tl
   .to('#loader-wipe', { scaleX: 0, transformOrigin: 'right', duration: 0.5, ease: 'power3.inOut' })
   .to('#loader', { opacity: 0, duration: 0.3, pointerEvents: 'none' })
   .set('#loader', { display: 'none' })
+  .add(() => { document.body.classList.add('ready'); })
   // Curtain name reveal
   .to(['#cn1','#cn2','#cn3'], {
     y: '0%',
@@ -908,6 +934,7 @@ tl
     stagger: 0.12,
     ease: 'power4.out'
   }, '-=0.2');
+}); // end fonts.ready
 
 // ── HERO — floaters fade in on scroll ────
 ScrollTrigger.create({
