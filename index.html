@@ -5,10 +5,17 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Eduardo Castro — Brand Strategist</title>
+<meta name="description" content="Eduardo Castro — Brand Strategist with 13+ years at PepsiCo, J&J, and Grupo Mariposa. Creator of Doritos Rainbow.">
+<meta property="og:title" content="Eduardo Castro — Brand Strategist">
+<meta property="og:description" content="13+ years building brands that move culture and market share.">
+<meta property="og:image" content="https://edu.casjor.com/assets/IMG_3827.jpeg">
+<meta property="og:url" content="https://edu.casjor.com">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://edu.casjor.com">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -22,8 +29,8 @@
 html { scroll-behavior: auto; } /* GSAP handles smooth scroll */
 
 body {
-background-color: var(–paper);
-color: var(–ink);
+background-color: var(--paper);
+color: var(--ink);
 font-family: ‘Space Grotesk’, sans-serif;
 overflow-x: hidden;
 cursor: none; /* custom cursor */
@@ -33,7 +40,7 @@ cursor: none; /* custom cursor */
 .cursor {
 position: fixed;
 width: 12px; height: 12px;
-background: var(–accent);
+background: var(--accent);
 border-radius: 50%;
 pointer-events: none;
 z-index: 9999;
@@ -44,7 +51,7 @@ mix-blend-mode: multiply;
 .cursor-ring {
 position: fixed;
 width: 36px; height: 36px;
-border: 1.5px solid var(–accent);
+border: 1.5px solid var(--accent);
 border-radius: 50%;
 pointer-events: none;
 z-index: 9998;
@@ -86,20 +93,20 @@ font-family: ‘Space Mono’, monospace;
 font-size: clamp(0.8rem, 1.5vw, 1.1rem);
 letter-spacing: 0.3em;
 text-transform: uppercase;
-color: var(–accent);
+color: var(--accent);
 opacity: 0;
 }
 #loader-bar {
 position: absolute;
 bottom: 0; left: 0;
 height: 2px;
-background: var(–accent);
+background: var(--accent);
 width: 0%;
 }
 #loader-wipe {
 position: absolute;
 inset: 0;
-background: var(–accent);
+background: var(--accent);
 transform: scaleX(0);
 transform-origin: left;
 }
@@ -129,7 +136,7 @@ text-transform: uppercase;
 letter-spacing: 0.08em;
 }
 .stroke-text {
--webkit-text-stroke: 2px var(–accent);
+-webkit-text-stroke: 2px var(--accent);
 color: transparent;
 }
 .curtain-name {
@@ -139,7 +146,7 @@ text-transform: uppercase;
 letter-spacing: -0.04em;
 line-height: 0.82;
 font-size: clamp(6rem, 18vw, 22rem);
-color: var(–accent);
+color: var(--accent);
 overflow: hidden;
 }
 .curtain-name-line { display: block; transform: translateY(110%); }
@@ -149,7 +156,7 @@ overflow: hidden;
 position: relative;
 height: 100vh;
 width: 100vw;
-background: var(–paper);
+background: var(--paper);
 overflow: hidden;
 display: flex;
 align-items: center;
@@ -157,8 +164,8 @@ justify-content: center;
 }
 .floating-module {
 position: fixed;
-background: var(–paper);
-border: 2px solid var(–ink);
+background: var(--paper);
+border: 2px solid var(--ink);
 padding: 1.25rem;
 z-index: 50;
 opacity: 0;
@@ -178,23 +185,23 @@ display: block;
 overflow: hidden;
 }
 .hero-name-inner { display: block; transform: translateY(110%); }
-.orange-text { color: var(–accent); }
-.black-text { color: var(–ink); }
+.orange-text { color: var(--accent); }
+.black-text { color: var(--ink); }
 
 /* ── STATS ── */
 #stats {
 position: relative;
-background: var(–accent);
-color: var(–ink);
+background: var(--accent);
+color: var(--ink);
 padding: 8rem 3rem;
 overflow: hidden;
-border-top: 2px solid var(–ink);
+border-top: 2px solid var(--ink);
 }
 #stats .diagonal-cut {
 position: absolute;
 top: 0; right: 0;
 width: 50%; height: 100%;
-background: var(–ink);
+background: var(--ink);
 clip-path: polygon(100% 0, 20% 100%, 100% 100%);
 pointer-events: none;
 }
@@ -220,8 +227,8 @@ opacity: 0;
 /* ── MANIFESTO ── */
 #manifesto {
 padding: 10rem 3rem;
-background: var(–paper);
-border-top: 2px solid var(–ink);
+background: var(--paper);
+border-top: 2px solid var(--ink);
 overflow: hidden;
 }
 .manifesto-quote {
@@ -243,8 +250,8 @@ transform: translateY(40px);
 /* ── PROJECTS ── */
 #projects {
 background: #1a1a1a;
-color: var(–paper);
-border-top: 2px solid var(–ink);
+color: var(--paper);
+border-top: 2px solid var(--ink);
 }
 .project-strip {
 position: relative;
@@ -257,15 +264,15 @@ cursor: none;
 content: ‘’;
 position: absolute;
 inset: 0;
-background: var(–accent);
+background: var(--accent);
 transform: scaleX(0);
 transform-origin: left;
 transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
 z-index: 0;
 }
 .project-strip:hover::before { transform: scaleX(1); }
-.project-strip:hover .project-title { color: var(–ink); }
-.project-strip:hover .project-meta { color: var(–ink); }
+.project-strip:hover .project-title { color: var(--ink); }
+.project-strip:hover .project-meta { color: var(--ink); }
 .project-strip:hover .project-desc { color: rgba(0,0,0,0.6); }
 .project-strip:hover .project-triangle { opacity: 0.15; }
 
@@ -287,7 +294,7 @@ font-family: ‘Space Mono’, monospace;
 font-size: 0.6rem;
 text-transform: uppercase;
 letter-spacing: 0.08em;
-color: var(–accent);
+color: var(--accent);
 margin-bottom: 1.5rem;
 display: block;
 transition: color 0.4s;
@@ -308,7 +315,7 @@ text-transform: uppercase;
 letter-spacing: -0.04em;
 line-height: 0.7;
 font-size: clamp(5rem, 16vw, 22rem);
-color: var(–accent);
+color: var(--accent);
 white-space: nowrap;
 margin-right: -20vw;
 flex: 1;
@@ -328,8 +335,8 @@ pointer-events: none;
 #credentials {
 position: relative;
 padding: 10rem 3rem;
-background: var(–paper);
-border-top: 2px solid var(–ink);
+background: var(--paper);
+border-top: 2px solid var(--ink);
 overflow: hidden;
 }
 .bg-letter {
@@ -343,7 +350,7 @@ font-family: ‘Space Grotesk’, sans-serif;
 font-weight: 800;
 font-size: 90vw;
 line-height: 1;
--webkit-text-stroke: 1px var(–ink);
+-webkit-text-stroke: 1px var(--ink);
 color: transparent;
 opacity: 0.025;
 text-transform: uppercase;
@@ -369,7 +376,7 @@ text-transform: uppercase;
 letter-spacing: -0.04em;
 line-height: 0.75;
 font-size: clamp(3rem, 10vw, 14rem);
-border-bottom: 2px solid var(–ink);
+border-bottom: 2px solid var(--ink);
 padding-bottom: 2rem;
 margin-bottom: 1.5rem;
 }
@@ -386,14 +393,14 @@ font-size: clamp(2rem, 5vw, 5rem);
 position: relative;
 min-height: 100vh;
 background: #1a1a1a;
-color: var(–paper);
+color: var(--paper);
 display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: flex-start;
 padding: 4rem 3rem;
 overflow: hidden;
-border-top: 2px solid var(–ink);
+border-top: 2px solid var(--ink);
 }
 .contact-triangle {
 position: absolute;
@@ -407,7 +414,7 @@ text-transform: uppercase;
 letter-spacing: -0.04em;
 line-height: 0.75;
 font-size: clamp(4rem, 16vw, 24rem);
-color: var(–accent);
+color: var(--accent);
 margin-bottom: 4rem;
 max-width: 95vw;
 opacity: 0;
@@ -418,7 +425,7 @@ font-family: ‘Space Mono’, monospace;
 font-size: 0.72rem;
 text-transform: uppercase;
 letter-spacing: 0.08em;
-color: var(–paper);
+color: var(--paper);
 text-decoration: none;
 display: block;
 margin-bottom: 0.5rem;
@@ -455,7 +462,7 @@ transition: background 0.2s, color 0.2s;
 position: fixed;
 top: 0; left: 0;
 height: 2px;
-background: var(–accent);
+background: var(--accent);
 z-index: 200;
 width: 0%;
 transform-origin: left;
@@ -713,7 +720,6 @@ transform-origin: left;
   <div class="bg-letter">E</div>
   <div style="position:relative; z-index:1;">
 
-```
 <div class="cred-item">
   <span class="cred-number">01</span>
   <div class="cred-title">BSC COMPUTER ENGINEERING &amp; IT PROJECT MANAGEMENT</div>
@@ -737,7 +743,6 @@ transform-origin: left;
   <div class="cred-title">PMP · OCT 2016 &amp;&amp; CSPO · OCT 2022</div>
   <div class="cred-institution">PMI / SCRUM INC.</div>
 </div>
-```
 
   </div>
 </section>
