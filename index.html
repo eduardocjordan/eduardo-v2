@@ -18,10 +18,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --ink: #1a1a1a;
+  :root, [data-theme="light"] {
     --paper: #f4f4f4;
+    --ink: #000000;
     --accent: #ff4d00;
+    --display: #000000;
+    --grid-line: rgba(0,0,0,0.06);
+  }
+  [data-theme="dark"] {
+    --paper: #0a0a0a;
+    --ink: #ff4d00;
+    --accent: #f4f4f4;
+    --display: #ffffff;
+    --grid-line: rgba(255,255,255,0.04);
+  }
+  .theme-orange {
+    --paper: #ff4d00;
+    --ink: #000000;
+    --accent: #ffffff;
   }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,7 +130,7 @@ transform-origin: left;
 position: relative;
 height: 100vh;
 width: 100vw;
-background: #121212;
+background-color: var(--paper);
 overflow: hidden;
 display: flex;
 flex-direction: column;
@@ -124,8 +138,8 @@ justify-content: center;
 align-items: flex-start;
 padding: 2rem 3rem;
 background-image:
-linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px),
-linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px);
+linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
 background-size: 20% 25%;
 }
 .curtain-meta {
@@ -227,8 +241,8 @@ opacity: 0;
 /* ── MANIFESTO ── */
 #manifesto {
 padding: 10rem 3rem;
-background: var(--paper);
-border-top: 2px solid var(--ink);
+background: #0a0a0a;
+color: #f4f4f4;
 overflow: hidden;
 }
 .manifesto-quote {
@@ -241,17 +255,19 @@ font-size: clamp(3rem, 8vw, 10rem);
 margin-bottom: 6rem;
 opacity: 0;
 transform: translateY(60px);
+color: #ff4d00;
 }
 .manifesto-col {
 opacity: 0;
 transform: translateY(40px);
+color: #f4f4f4;
 }
 
 /* ── PROJECTS ── */
 #projects {
-background: #1a1a1a;
-color: var(--paper);
-border-top: 2px solid var(--ink);
+background: #0a0a0a;
+color: #f4f4f4;
+border-top: 2px solid #ff4d00;
 }
 .project-strip {
 position: relative;
@@ -368,6 +384,7 @@ letter-spacing: 0.08em;
 text-transform: uppercase;
 margin-bottom: 3rem;
 display: block;
+color: var(--accent);
 }
 .cred-title {
 font-family: ‘Space Grotesk’, sans-serif;
@@ -386,21 +403,22 @@ font-weight: 800;
 text-transform: uppercase;
 letter-spacing: -0.04em;
 font-size: clamp(2rem, 5vw, 5rem);
+color: var(--accent);
 }
 
 /* ── CONTACT ── */
 #contact {
 position: relative;
 min-height: 100vh;
-background: #1a1a1a;
-color: var(--paper);
+background: #0a0a0a;
+color: #f4f4f4;
 display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: flex-start;
 padding: 4rem 3rem;
 overflow: hidden;
-border-top: 2px solid var(--ink);
+border-top: 2px solid #ff4d00;
 }
 .contact-triangle {
 position: absolute;
@@ -414,7 +432,7 @@ text-transform: uppercase;
 letter-spacing: -0.04em;
 line-height: 0.75;
 font-size: clamp(4rem, 16vw, 24rem);
-color: var(--accent);
+color: #ff4d00;
 margin-bottom: 4rem;
 max-width: 95vw;
 opacity: 0;
@@ -425,7 +443,7 @@ font-family: ‘Space Mono’, monospace;
 font-size: 0.72rem;
 text-transform: uppercase;
 letter-spacing: 0.08em;
-color: var(--paper);
+color: #f4f4f4;
 text-decoration: none;
 display: block;
 margin-bottom: 0.5rem;
@@ -601,7 +619,7 @@ transform-origin: left;
      STATS
 ════════════════════════════════════════ -->
 
-<section id="stats">
+<section id="stats" class="theme-orange">
   <div class="diagonal-cut"></div>
   <div style="position:relative; z-index:2;">
     <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; align-items:end;">
@@ -753,11 +771,11 @@ transform-origin: left;
 
 <section id="contact">
   <!-- Background triangles -->
-  <div class="contact-triangle" style="top:10%; left:15%; width:18rem; height:18rem; background:var(--accent); opacity:0.4; transform:rotate(45deg);"></div>
-  <div class="contact-triangle" style="top:60%; right:10%; width:24rem; height:24rem; background:var(--accent); opacity:0.3; transform:rotate(-15deg);"></div>
-  <div class="contact-triangle" style="bottom:5%; left:40%; width:12rem; height:12rem; background:var(--accent); opacity:0.5; transform:rotate(180deg);"></div>
-  <div class="contact-triangle" style="top:40%; left:60%; width:8rem; height:8rem; background:var(--accent); opacity:0.25; transform:rotate(90deg);"></div>
-  <div class="contact-triangle" style="top:20%; right:40%; width:30rem; height:30rem; background:var(--accent); opacity:0.1; transform:rotate(-60deg);"></div>
+  <div class="contact-triangle" style="top:10%; left:15%; width:18rem; height:18rem; background:#ffffff; opacity:0.4; transform:rotate(45deg);"></div>
+  <div class="contact-triangle" style="top:60%; right:10%; width:24rem; height:24rem; background:#ffffff; opacity:0.3; transform:rotate(-15deg);"></div>
+  <div class="contact-triangle" style="bottom:5%; left:40%; width:12rem; height:12rem; background:#ffffff; opacity:0.5; transform:rotate(180deg);"></div>
+  <div class="contact-triangle" style="top:40%; left:60%; width:8rem; height:8rem; background:#ffffff; opacity:0.25; transform:rotate(90deg);"></div>
+  <div class="contact-triangle" style="top:20%; right:40%; width:30rem; height:30rem; background:#ffffff; opacity:0.1; transform:rotate(-60deg);"></div>
 
   <div style="position:relative; z-index:1; width:100%; margin-bottom:8rem;">
     <h2 class="contact-heading">LET'S BUILD SOMETHING WORTH REMEMBERING</h2>
