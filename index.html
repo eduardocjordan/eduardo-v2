@@ -488,10 +488,61 @@ transform-origin: left;
 
 /* ── SECTION TRANSITION overlay ── */
 .section-reveal { opacity: 0; }
+
+/* ── DISPLAY TYPE MOBILE OVERRIDE ── */
+@media (max-width: 767px) {
+  .curtain-name, .hero-name, .project-title,
+  .cred-title, .cred-institution, .contact-heading, .manifesto-quote {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+  }
+  body { font-family: 'Inter', sans-serif; font-weight: 300; }
+}
+
+/* ── HIDDEN THEME TOGGLE ── */
+#theme-toggle-zone {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  z-index: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#theme-toggle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: relative;
+}
+#theme-toggle-zone:hover #theme-toggle { opacity: 1; }
+#theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 50%; height: 100%;
+  background: #000000;
+}
+#theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 50%; height: 100%;
+  background: #ffffff;
+}
 </style>
 
 </head>
 <body>
+
+<!-- Hidden theme toggle -->
+<div id="theme-toggle-zone" title="Toggle theme"><div id="theme-toggle"></div></div>
 
 <!-- Custom cursor -->
 
@@ -986,6 +1037,24 @@ if (window.innerWidth < 768) {
     el.style.opacity = '0';
   });
 }
+
+// ── THEME DETECTION & TOGGLE ──────────────
+(function() {
+  const html = document.documentElement;
+  const stored = localStorage.getItem('theme');
+  if (stored) {
+    html.setAttribute('data-theme', stored);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
+  document.getElementById('theme-toggle-zone').addEventListener('click', () => {
+    const current = html.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+})();
 </script>
 
 </body>
