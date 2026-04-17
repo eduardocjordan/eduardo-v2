@@ -12,6 +12,14 @@
 <meta property="og:url" content="https://edu.casjor.com">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://edu.casjor.com">
+<script>
+  /* Inline theme: set data-theme before first paint to prevent FOUC */
+  (function() {
+    var t = localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -110,20 +118,20 @@ font-family: ‘Space Mono’, monospace;
 font-size: clamp(0.8rem, 1.5vw, 1.1rem);
 letter-spacing: 0.3em;
 text-transform: uppercase;
-color: var(--accent);
+color: #ff4d00;
 opacity: 0;
 }
 #loader-bar {
 position: absolute;
 bottom: 0; left: 0;
 height: 2px;
-background: var(--accent);
+background: #ff4d00;
 width: 0%;
 }
 #loader-wipe {
 position: absolute;
 inset: 0;
-background: var(--accent);
+background: #ff4d00;
 transform: scaleX(0);
 transform-origin: left;
 }
@@ -504,7 +512,7 @@ transition: background 0.2s, color 0.2s;
 position: fixed;
 top: 0; left: 0;
 height: 2px;
-background: var(--accent);
+background: #ff4d00;
 z-index: 200;
 width: 0%;
 transform-origin: left;
@@ -601,8 +609,8 @@ transform-origin: left;
   }
 
   /* Manifesto */
-  #manifesto { grid-template-columns: 1fr; }
-  #manifesto > div { grid-template-columns: 1fr; }
+  #manifesto > div[style] { grid-template-columns: 1fr !important; }
+  #manifesto { padding: 6rem 1.5rem; }
 }
 
 /* ── HIDDEN THEME TOGGLE ── */
@@ -685,10 +693,10 @@ transform-origin: left;
 
   <div style="width:100%; padding-top:5rem;">
     <div class="curtain-name">
-      <span class="curtain-name-line" id="cn1">EDUARDO</span>
+      <span class="curtain-name-line" id="cn1">EDU<span style="color:var(--ink)">ARDO</span></span>
     </div>
     <div class="curtain-name">
-      <span class="curtain-name-line" id="cn2">CASTRO</span>
+      <span class="curtain-name-line" id="cn2">CAS<span style="color:var(--ink)">TRO</span></span>
     </div>
     <div class="curtain-name stroke-text" style="color:transparent;">
       <span class="curtain-name-line" id="cn3">CASTRO</span>
@@ -976,6 +984,10 @@ gsap.registerPlugin(ScrollTrigger);
 // ── LENIS SMOOTH SCROLL ────────────────
 const lenis = new Lenis();
 lenis.on('scroll', ScrollTrigger.update);
+lenis.on('scroll', (e) => {
+  const pct = e.scroll / (document.body.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
 gsap.ticker.add((time) => { lenis.raf(time * 1000); });
 gsap.ticker.lagSmoothing(0);
 
@@ -1016,12 +1028,7 @@ document.querySelectorAll('a, .back-top, .project-strip').forEach(el => {
   });
 });
 
-// ── SCROLL PROGRESS ──────────────────────
-const progress = document.getElementById('progress');
-window.addEventListener('scroll', () => {
-  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
-  progress.style.width = pct + '%';
-});
+// (scroll progress handled by lenis.on above)
 
 // ── LOADER ───────────────────────────────
 document.fonts.ready.then(() => {
@@ -1215,23 +1222,13 @@ if (!window.matchMedia('(pointer: coarse)').matches) {
   });
 }
 
-// ── THEME DETECTION & TOGGLE ──────────────
-(function() {
+// ── THEME TOGGLE (detection already ran in <head>) ──
+document.getElementById('theme-toggle-zone').addEventListener('click', () => {
   const html = document.documentElement;
-  const stored = localStorage.getItem('theme');
-  if (stored) {
-    html.setAttribute('data-theme', stored);
-  } else {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-  }
-  document.getElementById('theme-toggle-zone').addEventListener('click', () => {
-    const current = html.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  });
-})();
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
 </script>
 
 </body>
