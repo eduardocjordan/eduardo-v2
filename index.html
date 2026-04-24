@@ -17,24 +17,25 @@
   (function() {
     var t = localStorage.getItem('theme') ||
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.classList.toggle('dark', t === 'dark');
   })();
 </script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>tailwind.config = { darkMode: 'class' }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Space+Grotesk:wght@300;400;700;800&family=Space+Mono&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-  :root, [data-theme="light"] {
+  :root {
     --paper: #f4f4f4;
     --ink: #000000;
     --accent: #ff4d00;
     --display: #000000;
     --grid-line: rgba(0,0,0,0.06);
   }
-  [data-theme="dark"] {
+  .dark {
     --paper: #0a0a0a;
     --ink: #ff4d00;
     --accent: #f4f4f4;
@@ -361,7 +362,6 @@ padding: 10rem 3rem;
 background: var(--paper);
 border-top: 2px solid var(--ink);
 overflow: hidden;
-perspective: 1000px;
 }
 .bg-letter {
 position: absolute;
@@ -380,41 +380,175 @@ opacity: 0.025;
 text-transform: uppercase;
 user-select: none;
 }
-.cred-item {
+/* 3-column grid */
+.cred-grid {
+position: relative;
+z-index: 1;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 3rem;
+align-items: start;
+}
+.cred-col {
+border-top: 2px solid var(--ink);
+padding-top: 2rem;
 opacity: 0;
-margin-bottom: 10rem;
-will-change: transform, opacity;
-padding: 1.5rem 0; cursor: pointer; transition: background-color 0.4s;
+will-change: opacity, transform;
 }
-.cred-item:hover { background-color: var(--ink); }
-.cred-item:hover .cred-title { color: var(--paper); }
-.cred-number {
+.cred-col-label {
 font-family: ‘Space Mono’, monospace;
-font-size: 0.65rem;
+font-size: 0.6rem;
+text-transform: uppercase;
 letter-spacing: 0.08em;
-text-transform: uppercase;
-margin-bottom: 3rem;
+color: var(--accent);
 display: block;
+margin-bottom: 2rem;
+}
+.cred-entry {
+margin-bottom: 1.75rem;
+padding-bottom: 1.75rem;
+border-bottom: 1px solid var(--ink);
+}
+.cred-entry:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.cred-entry-title {
+font-family: ‘Space Grotesk’, sans-serif;
+font-weight: 700;
+font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+text-transform: uppercase;
+letter-spacing: -0.01em;
+line-height: 1.35;
+margin-bottom: 0.3rem;
+color: var(--ink);
+}
+.cred-entry-org {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.58rem;
+text-transform: uppercase;
+letter-spacing: 0.06em;
 color: var(--accent);
 }
-.cred-title {
-font-family: ‘Space Grotesk’, sans-serif;
-font-weight: 800;
-text-transform: uppercase;
-letter-spacing: -0.04em;
-line-height: 0.75;
-font-size: clamp(3rem, 10vw, 14rem);
-border-bottom: 2px solid var(--ink);
-padding-bottom: 2rem;
-margin-bottom: 1.5rem;
+.cred-tools-rule {
+border: none;
+border-top: 1px solid var(--ink);
+margin: 2rem 0 1.5rem;
 }
-.cred-institution {
-font-family: ‘Space Grotesk’, sans-serif;
-font-weight: 800;
+.cred-tools-label {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.6rem;
 text-transform: uppercase;
-letter-spacing: -0.04em;
-font-size: clamp(2rem, 5vw, 5rem);
+letter-spacing: 0.08em;
 color: var(--accent);
+display: block;
+margin-bottom: 1rem;
+}
+.cred-tools-list {
+display: flex;
+flex-wrap: wrap;
+gap: 0.4rem;
+}
+.cred-tool {
+font-family: ‘Space Mono’, monospace;
+font-size: 0.52rem;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+color: var(--ink);
+border: 1px solid var(--ink);
+padding: 0.2rem 0.5rem;
+opacity: 0.65;
+}
+/* Mobile: horizontal carousel */
+@media (max-width: 767px) {
+  #credentials { padding: 6rem 0 4rem; }
+  .cred-grid {
+    display: flex;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    padding: 0 1.5rem;
+  }
+  .cred-grid::-webkit-scrollbar { display: none; }
+  .cred-col {
+    flex: 0 0 85vw;
+    scroll-snap-align: start;
+    padding-right: 2rem;
+    margin-right: 1.5rem;
+    border-top: none;
+    border-left: 2px solid var(--ink);
+    padding-left: 1.5rem;
+    padding-top: 1.5rem;
+  }
+}
+
+/* ── BRANDS ── */
+#brands {
+padding: 5rem 0;
+background: var(--paper);
+border-top: 2px solid var(--ink);
+overflow: hidden;
+}
+.brands-header {
+font-family: 'Space Mono', monospace;
+font-size: 0.6rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(--accent);
+margin-bottom: 2.5rem;
+padding: 0 3rem;
+display: block;
+}
+.brands-track-wrapper {
+position: relative;
+overflow: hidden;
+}
+.brands-track-wrapper::before,
+.brands-track-wrapper::after {
+content: '';
+position: absolute;
+top: 0; bottom: 0;
+width: 5rem;
+z-index: 2;
+pointer-events: none;
+}
+.brands-track-wrapper::before { left: 0; background: linear-gradient(to right, var(--paper), transparent); }
+.brands-track-wrapper::after  { right: 0; background: linear-gradient(to left,  var(--paper), transparent); }
+.brands-row {
+display: flex;
+margin-bottom: 1rem;
+}
+.brands-row:last-child { margin-bottom: 0; }
+.brands-row-inner {
+display: flex;
+gap: 1rem;
+flex-shrink: 0;
+animation-timing-function: linear;
+animation-iteration-count: infinite;
+}
+.brands-row-1 .brands-row-inner { animation-name: brands-left;  animation-duration: 40s; }
+.brands-row-2 .brands-row-inner { animation-name: brands-right; animation-duration: 50s; }
+@keyframes brands-left  { 0% { transform: translateX(0); }    100% { transform: translateX(-50%); } }
+@keyframes brands-right { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); }    }
+.brand-item {
+display: flex;
+align-items: center;
+height: 32px;
+padding: 0 1rem;
+border: 1px solid var(--ink);
+white-space: nowrap;
+font-family: 'Space Mono', monospace;
+font-size: 0.55rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(--ink);
+opacity: 0.45;
+flex-shrink: 0;
+}
+@media (min-width: 768px) {
+  .brand-item { height: 44px; font-size: 0.65rem; }
+}
+@media (pointer: fine) {
+  .brand-item:hover { opacity: 0.9; }
 }
 
 /* ── CONTACT ── */
@@ -454,14 +588,14 @@ font-family: ‘Space Mono’, monospace;
 font-size: 0.72rem;
 text-transform: uppercase;
 letter-spacing: 0.08em;
-color: #f4f4f4;
+color: #f4f4f4; /* section bg is always #0a0a0a — hardcoded light text intentional */
 text-decoration: none;
 display: block;
 margin-bottom: 0.5rem;
 opacity: 0;
-transition: text-decoration 0.2s;
+transition: color 0.2s, text-decoration 0.2s;
 }
-.contact-link:hover { text-decoration: line-through; }
+.contact-link:hover { text-decoration: line-through; color: #ff4d00; }
 
 /* ── FOOTER ── */
 .site-footer {
@@ -506,15 +640,53 @@ transform-origin: left;
   .cursor, .cursor-ring { display: none; }
 }
 
-/* ── MOBILE: projects opacity fade (no pin) ── */
+/* ── MOBILE: projects carousel ── */
 @media (max-width: 767px) {
   #projects-orange { display: none; }
+  #projects-strips {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-top: 0 !important;
+  }
+  #projects-strips::-webkit-scrollbar { display: none; }
+  #projects-strips .project-strip {
+    flex: 0 0 100vw;
+    min-width: 100vw;
+    scroll-snap-align: start;
+    border-bottom: none;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .project-meta, .project-desc, .project-title { opacity: 1 !important; }
 }
+#project-dots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem 0;
+  background: #0a0a0a;
+}
+@media (max-width: 767px) {
+  #project-dots { display: flex; }
+}
+.project-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.project-dot.active { background: var(--accent); }
 
 /* ── DISPLAY TYPE MOBILE OVERRIDE ── */
 @media (max-width: 767px) {
   .curtain-name, .hero-name, .project-title,
-  .cred-title, .cred-institution, .contact-heading, .manifesto-quote {
+  .contact-heading, .manifesto-quote {
     font-family: 'Playfair Display', serif;
     font-weight: 900;
   }
@@ -570,10 +742,7 @@ transform-origin: left;
   /* Projects */
   .project-title { font-size: clamp(3.5rem, 14vw, 7rem); white-space: normal; margin-right: 0; }
 
-  /* Credentials */
-  .cred-title { font-size: clamp(1.8rem, 7vw, 4rem); }
-  .cred-institution { font-size: clamp(1.4rem, 5vw, 2.5rem); }
-  .cred-item { margin-bottom: 5rem; }
+  /* Credentials — mobile carousel handled via .cred-grid flex */
 
   /* Contact */
   .contact-heading { font-size: clamp(3rem, 13vw, 7rem); }
@@ -589,6 +758,84 @@ transform-origin: left;
   /* Manifesto */
   #manifesto > div[style] { grid-template-columns: 1fr !important; }
   #manifesto { padding: 6rem 1.5rem; }
+}
+
+/* ── HAMBURGER BUTTON (mobile only) ── */
+#hamburger-btn {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 310;
+  width: 44px;
+  height: 44px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  padding: 0;
+}
+@media (max-width: 767px) {
+  #hamburger-btn { display: flex; }
+}
+#hamburger-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 0.3s, opacity 0.3s;
+  transform-origin: center;
+}
+#hamburger-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+#hamburger-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+#hamburger-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE NAV DRAWER ── */
+#mobile-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: var(--paper);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 2rem 3rem;
+  overflow: hidden;
+}
+#mobile-nav.open { transform: translateX(0); }
+.mobile-nav-link {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  font-size: clamp(2.2rem, 9vw, 3.5rem);
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding: 1rem 0;
+  line-height: 1;
+}
+.mobile-nav-link:first-child { border-top: 1px solid var(--ink); }
+.mobile-nav-footer {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.mobile-nav-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.5;
 }
 
 /* ── HIDDEN THEME TOGGLE ── */
@@ -635,6 +882,24 @@ transform-origin: left;
 
 <!-- Hidden theme toggle -->
 <div id="theme-toggle-zone" title="Toggle theme"><div id="theme-toggle"></div></div>
+
+<!-- Hamburger button (mobile only) -->
+<button id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- Mobile nav drawer -->
+<nav id="mobile-nav" aria-hidden="true">
+  <a class="mobile-nav-link" href="#manifesto">Story</a>
+  <a class="mobile-nav-link" href="#projects-wrapper">Work</a>
+  <a class="mobile-nav-link" href="#credentials">Credentials</a>
+  <a class="mobile-nav-link" href="#contact">Contact</a>
+  <div class="mobile-nav-footer">
+    <a class="mobile-nav-sub" href="mailto:eduardocjordan@icloud.com">EDUARDOCJORDAN@ICLOUD.COM</a>
+    <a class="mobile-nav-sub" href="https://linkedin.com/in/eduardocaj">LINKEDIN / EDUARDOCAJ</a>
+    <a class="mobile-nav-sub" href="https://edu.casjor.com/assets/CV%20Eduardo%20Castro.pdf">DOWNLOAD RESUME</a>
+  </div>
+</nav>
 
 <!-- Custom cursor -->
 
@@ -718,10 +983,10 @@ transform-origin: left;
     </p>
   </div>
   <div class="floating-module" id="mod-bl2" style="bottom:8rem; left:1.5rem; width:16rem;">
-    <ul class="mono-text" style="font-size:0.6rem; line-height:2;">
-      <li>● DOWNLOAD RESUME</li>
-      <li>● LINKEDIN (EDUARDOCAJ)</li>
-      <li>● EDUARDOCJORDAN@ICLOUD.COM</li>
+    <ul class="mono-text" style="font-size:0.6rem; line-height:2; list-style:none;">
+      <li><a href="https://edu.casjor.com/assets/CV%20Eduardo%20Castro.pdf" style="color:var(--ink); text-decoration:none;">● DOWNLOAD RESUME</a></li>
+      <li><a href="https://linkedin.com/in/eduardocaj" style="color:var(--ink); text-decoration:none;">● LINKEDIN (EDUARDOCAJ)</a></li>
+      <li><a href="mailto:eduardocjordan@icloud.com" style="color:var(--ink); text-decoration:none;">● EDUARDOCJORDAN@ICLOUD.COM</a></li>
     </ul>
   </div>
   <div class="floating-module" id="mod-bl" style="bottom:1.5rem; left:1.5rem; width:16rem;">
@@ -818,6 +1083,50 @@ transform-origin: left;
 </section>
 
 <!-- ════════════════════════════════════════
+     BRANDS
+════════════════════════════════════════ -->
+
+<section id="brands">
+  <span class="brands-header">BRANDS &amp; ORGANIZATIONS</span>
+  <div class="brands-track-wrapper">
+    <!-- Row 1: scroll left 40s -->
+    <div class="brands-row brands-row-1">
+      <div class="brands-row-inner">
+        <div class="brand-item">PEPSICO</div>
+        <div class="brand-item">JOHNSON &amp; JOHNSON</div>
+        <div class="brand-item">GRUPO MARIPOSA</div>
+        <div class="brand-item">DORITOS</div>
+        <div class="brand-item">NEUTROGENA</div>
+        <div class="brand-item">NIELSEN</div>
+        <div class="brand-item">PEPSICO</div>
+        <div class="brand-item">JOHNSON &amp; JOHNSON</div>
+        <div class="brand-item">GRUPO MARIPOSA</div>
+        <div class="brand-item">DORITOS</div>
+        <div class="brand-item">NEUTROGENA</div>
+        <div class="brand-item">NIELSEN</div>
+      </div>
+    </div>
+    <!-- Row 2: scroll right 50s -->
+    <div class="brands-row brands-row-2">
+      <div class="brands-row-inner">
+        <div class="brand-item">EUROMONITOR</div>
+        <div class="brand-item">GOOGLE ANALYTICS</div>
+        <div class="brand-item">META BUSINESS SUITE</div>
+        <div class="brand-item">SEMRUSH</div>
+        <div class="brand-item">TABLEAU</div>
+        <div class="brand-item">HUBSPOT</div>
+        <div class="brand-item">EUROMONITOR</div>
+        <div class="brand-item">GOOGLE ANALYTICS</div>
+        <div class="brand-item">META BUSINESS SUITE</div>
+        <div class="brand-item">SEMRUSH</div>
+        <div class="brand-item">TABLEAU</div>
+        <div class="brand-item">HUBSPOT</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
      PROJECTS
 ════════════════════════════════════════ -->
 
@@ -885,37 +1194,93 @@ transform-origin: left;
   </div>
 </div><!-- /projects-wrapper -->
 
+<!-- Project dots (mobile carousel indicator) -->
+<div id="project-dots">
+  <div class="project-dot active" data-index="0"></div>
+  <div class="project-dot" data-index="1"></div>
+  <div class="project-dot" data-index="2"></div>
+  <div class="project-dot" data-index="3"></div>
+</div>
+
 <!-- ════════════════════════════════════════
      CREDENTIALS
 ════════════════════════════════════════ -->
 
 <section id="credentials">
   <div class="bg-letter">E</div>
-  <div style="position:relative; z-index:1;">
+  <div class="cred-grid">
 
-<div class="cred-item">
-  <span class="cred-number">01</span>
-  <div class="cred-title">BSC COMPUTER ENGINEERING &amp; IT PROJECT MANAGEMENT</div>
-  <div class="cred-institution">TECNOLÓGICO DE MONTERREY</div>
-</div>
+    <!-- Column 1: Education -->
+    <div class="cred-col">
+      <span class="cred-col-label">Education</span>
+      <div class="cred-entry">
+        <div class="cred-entry-title">BSc Computer Engineering &amp; IT Project Management</div>
+        <div class="cred-entry-org">Tecnológico de Monterrey</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">Strategic Marketing · Aug 2023</div>
+        <div class="cred-entry-org">Kellogg School of Management</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">Data Analysis · Aug 2022</div>
+        <div class="cred-entry-org">Wharton Executive Education</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">Project Management Professional (PMP) · Oct 2016</div>
+        <div class="cred-entry-org">PMI</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">Certified Scrum Product Owner (CSPO) · Oct 2022</div>
+        <div class="cred-entry-org">Scrum Inc.</div>
+      </div>
+    </div>
 
-<div class="cred-item">
-  <span class="cred-number">02</span>
-  <div class="cred-title">STRATEGIC MARKETING · AUG 2023</div>
-  <div class="cred-institution">KELLOGG SCHOOL OF MANAGEMENT</div>
-</div>
+    <!-- Column 2: Honors -->
+    <div class="cred-col">
+      <span class="cred-col-label">Honors</span>
+      <div class="cred-entry">
+        <div class="cred-entry-title">President's Outliers Award</div>
+        <div class="cred-entry-org">PepsiCo · 2016</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">James E. Burke Award</div>
+        <div class="cred-entry-org">Johnson &amp; Johnson</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">HRC Best Place to Work for LGBT+ Equity</div>
+        <div class="cred-entry-org">Johnson &amp; Johnson</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">LATAM Forum Recognition</div>
+        <div class="cred-entry-org">ERG Leadership</div>
+      </div>
+    </div>
 
-<div class="cred-item">
-  <span class="cred-number">03</span>
-  <div class="cred-title">DATA ANALYSIS · AUG 2022</div>
-  <div class="cred-institution">WHARTON EXECUTIVE EDUCATION</div>
-</div>
-
-<div class="cred-item" style="margin-bottom:0;">
-  <span class="cred-number">04</span>
-  <div class="cred-title">PMP · OCT 2016 &amp;&amp; CSPO · OCT 2022</div>
-  <div class="cred-institution">PMI / SCRUM INC.</div>
-</div>
+    <!-- Column 3: Languages + Key Tools -->
+    <div class="cred-col">
+      <span class="cred-col-label">Languages</span>
+      <div class="cred-entry">
+        <div class="cred-entry-title">Spanish</div>
+        <div class="cred-entry-org">Native</div>
+      </div>
+      <div class="cred-entry">
+        <div class="cred-entry-title">English</div>
+        <div class="cred-entry-org">Fluent</div>
+      </div>
+      <hr class="cred-tools-rule">
+      <span class="cred-tools-label">Key Tools</span>
+      <div class="cred-tools-list">
+        <span class="cred-tool">Nielsen</span>
+        <span class="cred-tool">Euromonitor</span>
+        <span class="cred-tool">Google Analytics</span>
+        <span class="cred-tool">Meta Business Suite</span>
+        <span class="cred-tool">SEMrush</span>
+        <span class="cred-tool">Tableau</span>
+        <span class="cred-tool">HubSpot</span>
+        <span class="cred-tool">Shopify</span>
+        <span class="cred-tool">Kantar</span>
+      </div>
+    </div>
 
   </div>
 </section>
@@ -1129,19 +1494,14 @@ if (!window.matchMedia('(pointer: coarse)').matches) {
   });
 }
 
-// ── CREDENTIALS — rotateX + delayed institution
-gsap.utils.toArray('.cred-item').forEach(el => {
-  const inst = el.querySelector('.cred-institution');
-  gsap.set(inst, { opacity: 0, y: 15 });
-
-  const tl = gsap.timeline({
-    scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play reverse play reverse' }
-  });
-  tl.fromTo(el,
-    { opacity: 0, y: 80, rotateX: -12, scale: 0.97 },
-    { opacity: 1, y: 0, rotateX: 0,   scale: 1,    duration: 1.4, ease: 'power4.out' }
+// ── CREDENTIALS — staggered columns
+gsap.utils.toArray('.cred-col').forEach((col, i) => {
+  gsap.fromTo(col,
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0, duration: 1.0, delay: i * 0.15, ease: 'power4.out',
+      scrollTrigger: { trigger: '#credentials', start: 'top 75%', once: true }
+    }
   );
-  tl.to(inst, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '+=0.1');
 });
 
 // ── CONTACT — opposite-side line entries ──
@@ -1170,12 +1530,26 @@ gsap.utils.toArray('.contact-triangle').forEach((el, i) => {
   });
 });
 
-// ── MOBILE: project fade ───────────────────
+// ── MOBILE: carousel + dots ───────────────
 if (window.innerWidth < 768) {
   document.querySelectorAll('.floating-module').forEach(el => { el.style.display = 'none'; el.style.opacity = '0'; });
-  gsap.utils.toArray('.project-strip').forEach(el => {
-    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: 'power4.out',
-      scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+  // Dots — IntersectionObserver on horizontal carousel
+  const strips = document.querySelectorAll('.project-strip');
+  const dots   = document.querySelectorAll('.project-dot');
+  const scrollContainer = document.getElementById('projects-strips');
+  const dotObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(strips).indexOf(entry.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { root: scrollContainer, threshold: 0.5 });
+  strips.forEach(s => dotObserver.observe(s));
+  // Dot click → scroll to card
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      strips[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     });
   });
 }
@@ -1201,12 +1575,36 @@ if (!window.matchMedia('(pointer: coarse)').matches) {
   });
 }
 
+// ── HAMBURGER MENU ────────────────────────
+(function() {
+  const btn = document.getElementById('hamburger-btn');
+  const nav = document.getElementById('mobile-nav');
+  function openNav() {
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    nav.classList.add('open');
+    nav.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNav() {
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('open');
+    nav.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  btn.addEventListener('click', () => {
+    btn.classList.contains('open') ? closeNav() : openNav();
+  });
+  nav.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', closeNav);
+  });
+})();
+
 // ── THEME TOGGLE ──────────────────────────
 document.getElementById('theme-toggle-zone').addEventListener('click', () => {
-  const html = document.documentElement;
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 });
 </script>
 
